@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Orbit Index — Interaction Lab v6</title>
+<link rel="stylesheet" href="orbit.css">
+</head>
+<body>
+<main id="stage" aria-label="Orbit Index. Drag the arc up or down to turn it. Tap the active item to open it. Arrow keys also work.">
+  <svg id="bg" aria-hidden="true" focusable="false"></svg>
+  <header class="hdr" aria-hidden="true"><span>ORBIT INDEX</span><span><b id="cnum">03</b> / 08</span></header>
+  <div id="items" role="list"></div>
+  <div id="info" class="info" aria-hidden="true"><dl id="irows"></dl><p class="open">tap to open ↗</p></div>
+  <section id="detail" class="detail" aria-label="Detail" hidden>
+    <svg id="dsvg" class="dsvg" aria-hidden="true" focusable="false"></svg>
+    <div class="dnum" id="dnum" aria-hidden="true">03</div>
+    <div class="dbody">
+      <p class="dk" id="dk"></p>
+      <h2 id="dname"></h2>
+      <p id="dnote"></p>
+      <dl id="drows"></dl>
+    </div>
+    <button type="button" id="back" class="back" aria-label="Back to the index"><svg viewBox="0 0 16 16"><path d="M10 2 4 8l6 6"/></svg><span>index</span></button>
+  </section>
+  <nav class="bar" aria-label="Controls">
+    <div class="grp">
+      <button type="button" id="prev" aria-label="Previous item"><svg viewBox="0 0 16 16"><path d="M2 10l6-6 6 6"/></svg></button>
+      <button type="button" id="next" aria-label="Next item"><svg viewBox="0 0 16 16"><path d="M2 6l6 6 6-6"/></svg></button>
+    </div>
+    <p class="cue" id="cue" aria-hidden="true"></p>
+    <button type="button" id="open" class="txt"><span id="openl">open</span><svg viewBox="0 0 16 16"><path id="openp" d="M5 3h8v8M13 3 3 13"/></svg></button>
+  </nav>
+  <p id="live" class="sr" role="status" aria-live="polite"></p>
+</main>
+<script src="orbit.js"></script>
+</body>
+</html>

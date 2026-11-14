@@ -1,0 +1,57 @@
+:root { --paper: #e8e8e4; --ink: #101010; --accent: #ff4d1c; --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace; --pad: 12px; --ui: var(--ink); }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; overflow: hidden; overscroll-behavior: none; background: var(--paper); }
+#stage { position: fixed; inset: 0; overflow: hidden; background: var(--paper); color: var(--ink); touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; font: 11px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+#stage.drag { cursor: grabbing; }
+#bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+#bg * { fill: none; stroke: var(--ink); }
+.hdr, .bar { color: var(--ui); transition: color .2s; }
+.hdr { position: absolute; left: var(--pad); right: var(--pad); top: calc(10px + env(safe-area-inset-top)); display: flex; justify-content: flex-end; gap: 16px; line-height: 16px; pointer-events: none; z-index: 41; }
+.hdr b { font-weight: 400; }
+#items { position: absolute; inset: 0; pointer-events: none; }
+.item { position: absolute; left: 0; top: 0; padding: 0; margin: 0; background: none; border: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; pointer-events: auto; touch-action: manipulation; will-change: transform, opacity; }
+.item .n { position: absolute; left: 0; top: 50%; transform: translateY(-50%); font: 10px/1 var(--mono); letter-spacing: .06em; opacity: .7; }
+.item .nm { position: absolute; left: 26px; top: 50%; transform: translateY(-50%); font: 800 20px/1 "Helvetica Neue", "Arial Narrow", Arial, sans-serif; letter-spacing: -.04em; text-transform: uppercase; white-space: nowrap; }
+.item[aria-current="true"] .n { color: var(--accent); opacity: 1; }
+.item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.info { position: absolute; left: 0; top: 0; pointer-events: none; will-change: transform, opacity; }
+.info dl { margin: 0; }
+.info dl div { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; border-top: 1px solid rgba(16,16,16,.3); font: 11px/1.2 var(--mono); letter-spacing: .06em; }
+.info dl div:last-child { border-bottom: 1px solid rgba(16,16,16,.3); }
+.info dt { opacity: .6; } .info dd { margin: 0; }
+.info .open { margin: 7px 0 0; color: var(--accent); font-size: 10px; }
+.detail { position: absolute; inset: 0; z-index: 30; background: var(--ink); color: var(--paper); clip-path: circle(0 at 50% 50%); overflow: hidden; }
+.detail[hidden] { display: none; }
+.dbody { position: absolute; left: var(--pad); right: var(--pad); top: calc(92px + env(safe-area-inset-top)); opacity: 0; }
+.dsvg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; }
+.dsvg circle { fill: none; stroke: var(--paper); }
+.dk { margin: 0 0 6px; color: var(--accent); }
+.dbody h2 { margin: 0 0 14px; font: 800 clamp(48px, 20vw, 96px)/.88 "Helvetica Neue", "Arial Narrow", Arial, sans-serif; letter-spacing: -.05em; }
+.dbody p#dnote { margin: 0 0 18px; font: 400 17px/1.4 "Helvetica Neue", Arial, sans-serif; text-transform: none; letter-spacing: 0; max-width: 28em; }
+.dbody dl { margin: 0; }
+.dbody dl div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 11px 0; border-top: 1px solid rgba(232,232,228,.3); font: 11px/1.2 var(--mono); letter-spacing: .06em; }
+.dbody dl div:last-child { border-bottom: 1px solid rgba(232,232,228,.3); }
+.dbody dt { opacity: .6; } .dbody dd { margin: 0; font-size: 15px; letter-spacing: 0; }
+.dnum { display: none; }
+.back { position: absolute; left: var(--pad); top: calc(30px + env(safe-area-inset-top)); height: 44px; min-width: 44px; padding: 0 14px 0 10px; display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--paper); border: 1px solid rgba(232,232,228,.55); font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; opacity: 0; pointer-events: none; z-index: 2; touch-action: manipulation; }
+.back svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.2; }
+.bar { position: absolute; left: var(--pad); right: var(--pad); bottom: calc(10px + env(safe-area-inset-bottom)); height: 44px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; z-index: 40; }
+.grp { display: flex; }
+.bar button { height: 44px; min-width: 44px; margin-left: -1px; padding: 0 12px; background: var(--uibg, var(--paper)); color: inherit; border: 1px solid currentColor; font: inherit; letter-spacing: inherit; text-transform: inherit; display: inline-flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; touch-action: manipulation; }
+.bar .grp button:first-child { margin-left: 0; }
+.bar button:disabled { opacity: .35; cursor: default; }
+.bar svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.2; }
+.bar button:active:not(:disabled) { transform: scale(.96); }
+.bar button:focus-visible, .back:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cue { margin: 0; text-align: center; font-size: 10px; line-height: 1.35; letter-spacing: .06em; opacity: .75; pointer-events: none; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }
+@media (min-width: 900px) and (orientation: landscape) {
+  :root { --pad: 36px; }
+  .bar { right: auto; width: 520px; }
+  .dbody { left: var(--pad); right: auto; width: min(560px, 46vw); top: calc(110px + env(safe-area-inset-top)); }
+  .dnum { display: block; position: absolute; right: -2vw; top: 50%; transform: translateY(-52%); font: 800 clamp(300px, 40vw, 620px)/.8 "Helvetica Neue", "Arial Narrow", Arial, sans-serif; letter-spacing: -.07em; color: transparent; -webkit-text-stroke: 1px rgba(232,232,228,.35); pointer-events: none; }
+  .back { top: calc(40px + env(safe-area-inset-top)); }
+}
+@media (prefers-reduced-motion: reduce) { .hdr, .bar { transition: none; } }
+html.rm .hdr, html.rm .bar { transition: none; }
+.item .nm, .item .n, .info { text-shadow: 0 0 5px var(--paper), 0 0 5px var(--paper), 0 0 9px var(--paper); }

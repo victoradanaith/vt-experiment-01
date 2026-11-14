@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Five Elements — Interaction Lab v3</title>
+<link rel="stylesheet" href="v3.css">
+</head>
+<body>
+<main id="stage" aria-label="Five categories. Swipe left or use the right arrow for the next one. Swipe up or use the down arrow for detail. Arrow keys also work.">
+  <div id="bgs" aria-hidden="true"></div>
+  <svg id="tex" aria-hidden="true" focusable="false" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice"></svg>
+  <p class="count" aria-hidden="true"><span id="cnum">01</span> / 05</p>
+  <div id="w1" class="word" aria-hidden="true"></div>
+  <div id="w2" class="word" aria-hidden="true"></div>
+  <section id="detail" class="detail" aria-live="polite">
+    <h2 id="d-tag"></h2>
+    <p id="d-body"></p>
+    <dl id="d-facts"></dl>
+  </section>
+  <nav class="bar" aria-label="Navigate">
+    <button type="button" id="prev" class="side" aria-label="Previous category"><svg viewBox="0 0 48 24"><path d="M46 12H4M12 4 4 12l8 8"/></svg><span id="prevl"></span></button>
+    <button type="button" id="deep" class="mid" aria-label="Show detail"><svg viewBox="0 0 24 48"><path id="deeppath" d="M12 2v42M4 36l8 8 8-8"/></svg><span id="deepl">detail</span></button>
+    <button type="button" id="next" class="side right" aria-label="Next category"><span id="nextl"></span><svg viewBox="0 0 48 24"><path d="M2 12h42M36 4l8 8-8 8"/></svg></button>
+  </nav>
+  <p id="live" class="sr" role="status" aria-live="polite"></p>
+</main>
+<script src="v3.js"></script>
+</body>
+</html>

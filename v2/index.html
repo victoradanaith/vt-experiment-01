@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Five Words — Interaction Lab v2</title>
+<link rel="stylesheet" href="v2.css">
+</head>
+<body>
+<main id="stage" aria-label="Swipe sideways to change the word. Swipe up to open the circle, down to close it. Arrow keys also work.">
+  <svg id="scene" aria-hidden="true" focusable="false">
+    <text id="word" text-anchor="middle" dominant-baseline="central"></text>
+    <g id="disc"><path id="h1"/><path id="h2"/></g>
+  </svg>
+  <p class="hint" id="hint" aria-hidden="true">swipe ← → &nbsp;·&nbsp; swipe ↑</p>
+  <nav class="pad" aria-label="Controls">
+    <div id="dots" role="group" aria-label="Words"></div>
+    <button type="button" id="open" aria-pressed="false" aria-label="Open the circle"><svg viewBox="0 0 16 16"><path id="ico" d="M2 8h12M8 2v12"/></svg></button>
+  </nav>
+  <p id="live" class="sr" role="status" aria-live="polite"></p>
+</main>
+<script src="v2.js"></script>
+</body>
+</html>

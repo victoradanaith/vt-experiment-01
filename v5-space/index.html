@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Fold (space) — Interaction Lab v5</title>
+<link rel="stylesheet" href="fold.css">
+</head>
+<body>
+<main id="stage" aria-label="The Fold. Pull down to unfold the sheet, push up to fold it. Swipe sideways for the next sheet. Tap the corner for detail.">
+  <div class="lines" aria-hidden="true"></div>
+  <div class="deskcol" aria-hidden="true">
+    <div class="big" id="bigidx">01</div>
+    <p class="meta">THE FOLD<br><span>INTERACTION LAB V5</span></p>
+  </div>
+  <header class="hdr" aria-hidden="true"><span><b id="cnum">01</b> / 04</span><span class="dim">THE FOLD</span></header>
+  <ol id="index" class="index" aria-label="Sheets"></ol>
+  <div id="sheets"></div>
+  <nav class="bar" aria-label="Controls">
+    <div class="grp">
+      <button type="button" id="prev" aria-label="Previous sheet"><svg viewBox="0 0 16 16"><path d="M10 2 4 8l6 6"/></svg></button>
+      <button type="button" id="next" aria-label="Next sheet"><svg viewBox="0 0 16 16"><path d="m6 2 6 6-6 6"/></svg></button>
+    </div>
+    <p class="cue" id="cue" aria-hidden="true"></p>
+    <button type="button" id="fold" class="txt" aria-pressed="false"><span id="foldl">unfold</span><svg viewBox="0 0 16 16"><path id="foldp" d="M8 2v12M3 9l5 5 5-5"/></svg></button>
+  </nav>
+  <p id="live" class="sr" role="status" aria-live="polite"></p>
+</main>
+<script src="fold.js"></script>
+</body>
+</html>

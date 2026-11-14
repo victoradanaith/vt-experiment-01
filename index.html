@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Five States — Interaction Lab</title>
+<meta name="description" content="A playable instrument: swipe sideways to turn a dial through five states, swipe up and down to pull the form apart.">
+<link rel="stylesheet" href="lab.css">
+</head>
+<body>
+<div id="stage" aria-label="Five States instrument. Swipe or drag sideways to change state, up or down to separate layers. Arrow keys also work.">
+  <div class="spots" aria-hidden="true"><i class="spot"></i><i class="spot"></i><i class="spot"></i></div>
+  <svg id="scene" aria-hidden="true" focusable="false"></svg>
+
+  <header class="chrome top">
+    <div class="id"><b>IXL</b> / 001<br><span>FIVE STATES</span></div>
+    <div class="count"><span id="c-now">01</span><span class="of"> / 05</span></div>
+  </header>
+
+  <p id="note" class="note" aria-hidden="true"></p>
+
+  <div class="tele" aria-hidden="true">
+    <span>θ <b id="t-th">000.0</b>°</span>
+    <span>v <b id="t-v">0.00</b></span>
+    <span>L <b id="t-l">0</b>/2</span>
+  </div>
+
+  <div class="hint" id="hint" aria-hidden="true">
+    <span class="h-x"><i></i>swipe sideways — turn</span>
+    <span class="h-y"><i></i>swipe up / down — split</span>
+  </div>
+
+  <nav class="pad" aria-label="Controls">
+    <div class="grp" role="group" aria-label="State">
+      <button type="button" id="b-prev" aria-label="Previous state"><svg viewBox="0 0 16 16"><path d="M10 2 4 8l6 6"/></svg></button>
+      <button type="button" id="b-next" aria-label="Next state"><svg viewBox="0 0 16 16"><path d="m6 2 6 6-6 6"/></svg></button>
+    </div>
+    <div class="grp" role="group" aria-label="Layers">
+      <button type="button" id="b-down" aria-label="Fewer layers: assemble"><svg viewBox="0 0 16 16"><path d="M2 8h12"/></svg></button>
+      <button type="button" id="b-up" aria-label="More layers: pull apart"><svg viewBox="0 0 16 16"><path d="M2 8h12M8 2v12"/></svg></button>
+    </div>
+    <button type="button" id="b-info" class="info-b" aria-expanded="false" aria-controls="info" aria-label="Controls help">i</button>
+  </nav>
+
+  <aside id="info" class="info" hidden>
+    <h2>Controls</h2>
+    <dl>
+      <dt>Swipe / drag ← →</dt><dd>Turn the dial. It has weight: a flick carries across states and settles with a slight overshoot.</dd>
+      <dt>Swipe / drag ↑ ↓</dt><dd>Pull the form apart in three levels: assembled, sliced, exploded.</dd>
+      <dt>Tap a numeral</dt><dd>Jump to that state.</dd>
+      <dt>Keyboard</dt><dd>← → state · ↑ ↓ layers · 1–5 jump · Home / End</dd>
+      <dt>Wheel</dt><dd>Desktop: scroll sideways or vertically on the stage.</dd>
+    </dl>
+    <p>Reduced motion: no inertia, no overshoot, no self-playing hint. Gestures still follow your finger one to one, then snap.</p>
+  </aside>
+
+  <p id="live" class="sr" role="status" aria-live="polite"></p>
+</div>
+<script src="lab.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ece8dd">
+<title>Strata Field — Interaction Lab v7</title>
+<meta name="description" content="Five horizontal bands. Swipe up and down to choose a layer, sideways to change the angle on it.">
+<link rel="stylesheet" href="strata.css">
+</head>
+<body>
+<div id="app">
+  <header class="hdr">
+    <div class="l1"><b>STRATA FIELD</b><span id="cnt" class="cnt">01 / 05</span></div>
+    <div class="l2">
+      <span id="views" class="views" aria-hidden="true"><i>WHERE</i><i>WHEN</i><i>WHAT</i></span>
+      <span id="cue" class="cue" aria-hidden="true"><em class="cv">↕</em> layers <em class="ch">↔</em> views</span>
+      <span class="keys" aria-hidden="true">↑↓ layer · ←→ view · ⏎ open · esc back</span>
+    </div>
+  </header>
+
+  <main id="field" class="field" aria-label="Strata Field. Swipe up or down to choose a layer, left or right to change the angle. Arrow keys also work."></main>
+
+  <nav class="bar" id="bar" aria-label="Controls">
+    <div class="grp" role="group" aria-label="Layer">
+      <button type="button" id="b-up" aria-label="Previous layer"><svg viewBox="0 0 16 16"><path d="m2 10 6-6 6 6"/></svg></button>
+      <button type="button" id="b-down" aria-label="Next layer"><svg viewBox="0 0 16 16"><path d="m2 6 6 6 6-6"/></svg></button>
+    </div>
+    <div class="grp" role="group" aria-label="Angle">
+      <button type="button" id="b-left" aria-label="Previous angle"><svg viewBox="0 0 16 16"><path d="M10 2 4 8l6 6"/></svg></button>
+      <button type="button" id="b-right" aria-label="Next angle"><svg viewBox="0 0 16 16"><path d="m6 2 6 6-6 6"/></svg></button>
+    </div>
+    <button type="button" id="b-open" class="open">OPEN</button>
+  </nav>
+
+  <section id="detail" class="detail" role="dialog" aria-modal="true" aria-labelledby="d-title" inert>
+    <div class="d-in">
+      <div class="d-top">
+        <button type="button" id="d-back" class="d-back"><svg viewBox="0 0 16 16"><path d="M10 2 4 8l6 6"/></svg>BACK</button>
+        <span id="d-cnt" class="d-cnt">01 / 05</span>
+      </div>
+      <h2 id="d-title" class="d-title"></h2>
+      <div class="d-txt" id="d-txt"></div>
+      <div class="d-grid" id="d-grid"></div>
+      <div class="d-strip" id="d-strip" role="group" aria-label="Layers"></div>
+    </div>
+  </section>
+
+  <p id="live" class="sr" role="status" aria-live="polite"></p>
+</div>
+<script src="strata.js"></script>
+</body>
+</html>

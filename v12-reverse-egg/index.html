@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F8F4EE">
+<title>Egg Token — Reverse Egg v12</title>
+<meta name="description" content="Concept prototype for Egg Token: start from the fried egg in the logo and scroll down to trace the result back to the raw egg. Sample content, not a live service.">
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="reverse.css">
+</head>
+<body>
+<div id="app">
+  <header class="hdr">
+    <div class="brand">
+      <img id="logo" class="lg" src="assets/egg-token-logo-1x.png" width="64" height="46" alt="Egg Token">
+      <span id="bt" class="bt">EGG TOKEN / CONCEPT</span>
+    </div>
+    <span id="cnt" class="cnt">00 / 06</span>
+    <button type="button" id="b-lang" class="lang" aria-label="Switch language to English">EN</button>
+  </header>
+
+  <main id="wrap" class="wrap">
+    <div id="head" class="head" data-k="intro">
+      <p id="lab" class="lab">00 / CONCEPT</p>
+      <h1 id="ttl" class="ttl">Less work.
+More flow.</h1>
+      <p id="sub" class="sub"></p>
+    </div>
+
+    <div id="stage" class="stage">
+      <img id="hero" class="hero" src="assets/egg-token-logo.png" alt="" aria-hidden="true">
+      <canvas id="cv" aria-hidden="true"></canvas>
+      <span id="eggs" class="eggs" aria-hidden="true"></span>
+      <span id="tag" class="tagline" aria-hidden="true">Human energy. Clear systems.</span>
+      <span id="cue" class="cue" aria-hidden="true"></span>
+      <ol id="rail" class="rail" aria-hidden="true"></ol>
+    </div>
+
+    <div id="capRow" class="caprow">
+      <p id="say" class="say"></p>
+      <button type="button" id="b-top" class="sq" hidden aria-label="Back to the result"><svg viewBox="0 0 16 16"><path d="M8 14V3M3 7l5-5 5 5"/></svg></button>
+      <button type="button" id="b-info" class="sq" aria-expanded="false" aria-controls="sheet" aria-label="Show details"><svg viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></svg></button>
+    </div>
+
+    <div id="scroller" class="scroller" tabindex="0" aria-label="Story. Scroll or swipe down to trace the result back to the raw egg. Swipe sideways to show more tokens. Arrow keys also work."></div>
+
+    <section id="sheet" class="sheet" role="region" aria-labelledby="sh-title" hidden>
+      <div class="sh-top"><span id="sh-title" class="sh-title"></span><button type="button" id="b-close" class="sq" aria-label="Close details"><svg viewBox="0 0 16 16"><path d="m3 3 10 10M13 3 3 13"/></svg></button></div>
+      <dl class="rows">
+        <div><dt id="d1"></dt><dd id="r1"></dd></div>
+        <div><dt id="d2"></dt><dd id="r2"></dd></div>
+        <div><dt id="d3"></dt><dd id="r3"></dd></div>
+        <div><dt id="d4"></dt><dd id="r4"></dd></div>
+      </dl>
+      <p id="note" class="note"></p>
+    </section>
+  </main>
+
+  <nav class="bar" aria-label="Controls">
+    <div class="grp" role="group" aria-label="Story">
+      <button type="button" id="b-up" aria-label="Back toward the result"><svg viewBox="0 0 16 16"><path d="m2 10 6-6 6 6"/></svg></button>
+      <button type="button" id="b-down" aria-label="Deeper, toward the raw egg"><svg viewBox="0 0 16 16"><path d="m2 6 6 6 6-6"/></svg></button>
+    </div>
+    <div class="grp" role="group" aria-label="Number of tokens">
+      <button type="button" id="b-less" aria-label="Fewer tokens, zoom in"><svg viewBox="0 0 16 16"><path d="M10 2 4 8l6 6"/></svg></button>
+      <span id="q" class="q" aria-hidden="true">×1</span>
+      <button type="button" id="b-more" aria-label="More tokens, zoom out"><svg viewBox="0 0 16 16"><path d="m6 2 6 6-6 6"/></svg></button>
+    </div>
+    <button type="button" id="b-auto" class="auto" aria-pressed="false">AUTO</button>
+  </nav>
+</div>
+<p id="live" class="sr" role="status" aria-live="polite"></p>
+<script src="reverse.js"></script>
+</body>
+</html>

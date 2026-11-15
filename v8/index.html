@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141414">
+<title>Many Eggs — Interaction Lab v8</title>
+<meta name="description" content="One egg, seven steps. Add more eggs and the steps repeat: scroll to cook, swipe to multiply, switch to auto.">
+<link rel="stylesheet" href="eggs.css">
+</head>
+<body>
+<div id="track">
+  <div id="app">
+    <header class="hdr">
+      <div><b>MANY EGGS</b><span class="sub"> / seven steps</span></div>
+      <div class="r"><span class="keys">↑↓ step · ←→ eggs · A auto</span><span id="cnt" class="cnt">01 / 07</span></div>
+    </header>
+
+    <main class="main">
+      <section id="stage" class="stage" aria-label="Eggs. Scroll to move through the steps. Swipe sideways to change how many eggs.">
+        <svg id="svg" aria-hidden="true" focusable="false"></svg>
+        <p id="cue" class="cue" aria-hidden="true"><em class="a1">↓</em> scroll to cook <em class="a2">↔</em> swipe for more eggs</p>
+      </section>
+
+      <section class="panel" aria-live="off">
+        <div class="step"><span id="n" class="n">01</span><h1 id="v" class="v">COLD STORE</h1></div>
+        <p class="tagrow"><span class="lab">AUTOMATION</span><span id="tag" class="tag">INBOX</span></p>
+        <p class="line"><span class="lab">EGG</span><span id="egg"></span></p>
+        <p class="line"><span class="lab">BUSINESS</span><span id="biz"></span></p>
+        <div class="tc">
+          <div class="tcl"><span id="tcl">HAND TOUCHES</span><b id="tcn">3</b></div>
+          <div class="meter" aria-hidden="true"><i id="tcb"></i></div>
+          <p class="fine">Illustration: 1 touch = 1 hand action on 1 egg in 1 step. Not measured data.</p>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bar" aria-label="Controls">
+      <div class="grp" role="group" aria-label="Step">
+        <button type="button" id="b-prev" aria-label="Previous step"><svg viewBox="0 0 16 16"><path d="m2 10 6-6 6 6"/></svg></button>
+        <button type="button" id="b-next" aria-label="Next step"><svg viewBox="0 0 16 16"><path d="m2 6 6 6 6-6"/></svg></button>
+      </div>
+      <div class="grp" role="group" aria-label="Number of eggs">
+        <button type="button" id="b-less" aria-label="Fewer eggs"><svg viewBox="0 0 16 16"><path d="M3 8h10"/></svg></button>
+        <span id="q" class="q" aria-hidden="true">×3</span>
+        <button type="button" id="b-more" aria-label="More eggs"><svg viewBox="0 0 16 16"><path d="M3 8h10M8 3v10"/></svg></button>
+      </div>
+      <button type="button" id="b-auto" class="auto" aria-pressed="false">AUTO</button>
+    </nav>
+  </div>
+</div>
+<p id="live" class="sr" role="status" aria-live="polite"></p>
+<script src="eggs.js"></script>
+</body>
+</html>

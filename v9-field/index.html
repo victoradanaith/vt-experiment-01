@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141414">
+<title>Egg Field — Interaction Lab v9</title>
+<meta name="description" content="One phase per page, filled edge to edge with eggs. Swipe up for the next phase; swipe sideways and the eggs multiply until they become pixel circles.">
+<link rel="stylesheet" href="field.css">
+</head>
+<body>
+<div id="app">
+  <header class="hdr">
+    <div class="l1"><b>EGG FIELD</b><span id="cnt" class="cnt">01 / 07</span></div>
+    <div class="l2"><span id="hint" class="hint"><em class="u">↕</em> phase <em class="s">↔</em> more eggs</span><span id="eggs" class="eggs">1 egg</span><span id="ticks" class="ticks" aria-hidden="true"></span></div>
+  </header>
+
+  <main class="wrap">
+    <div id="pages" class="pages" tabindex="0" aria-label="Seven phases of the egg process, one per page. Swipe up or down to change phase, sideways to change how many eggs."></div>
+    <ol id="rail" class="rail" aria-hidden="true"></ol>
+  </main>
+
+  <nav class="bar" aria-label="Controls">
+    <div class="grp" role="group" aria-label="Phase">
+      <button type="button" id="b-up" aria-label="Previous phase"><svg viewBox="0 0 16 16"><path d="m2 10 6-6 6 6"/></svg></button>
+      <button type="button" id="b-down" aria-label="Next phase"><svg viewBox="0 0 16 16"><path d="m2 6 6 6 6-6"/></svg></button>
+    </div>
+    <div class="grp" role="group" aria-label="Number of eggs">
+      <button type="button" id="b-less" aria-label="Fewer eggs"><svg viewBox="0 0 16 16"><path d="M10 2 4 8l6 6"/></svg></button>
+      <span id="q" class="q" aria-hidden="true">×1</span>
+      <button type="button" id="b-more" aria-label="More eggs"><svg viewBox="0 0 16 16"><path d="m6 2 6 6-6 6"/></svg></button>
+    </div>
+    <button type="button" id="b-auto" class="auto" aria-pressed="false">AUTO</button>
+  </nav>
+</div>
+<p id="live" class="sr" role="status" aria-live="polite"></p>
+<script src="field.js"></script>
+</body>
+</html>

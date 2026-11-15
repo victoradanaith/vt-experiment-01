@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141414">
+<title>Egg Morph — Interaction Lab v9</title>
+<meta name="description" content="Swipe up and down: the same egg changes state inside its circle. Swipe sideways: zoom out from 1 egg to 3, 9, 36, then endless pixel circles.">
+<link rel="stylesheet" href="morph.css">
+</head>
+<body>
+<div id="app">
+  <header class="hdr">
+    <div class="l1"><b>EGG MORPH</b><span id="cnt" class="cnt">01 / 07</span></div>
+    <div class="l2"><span id="hint" class="hint"><em class="u">↕</em> change state <em class="s">↔</em> zoom out</span><span id="eggs" class="eggs">1 egg</span><span id="ticks" class="ticks" aria-hidden="true"></span></div>
+  </header>
+
+  <main class="wrap">
+    <div class="head"><span id="n" class="n">01</span><h1 id="v" class="v">COLD</h1><span id="tag" class="tag">INBOX</span></div>
+    <div id="stage" class="stage" tabindex="0" aria-label="Egg field. Swipe up or down to change the state of the egg, sideways to zoom out to more eggs. Arrow keys also work.">
+      <canvas id="cv" aria-hidden="true"></canvas>
+    </div>
+    <ol id="rail" class="rail" aria-hidden="true"></ol>
+  </main>
+
+  <nav class="bar" aria-label="Controls">
+    <div class="grp" role="group" aria-label="State">
+      <button type="button" id="b-up" aria-label="Previous state"><svg viewBox="0 0 16 16"><path d="m2 10 6-6 6 6"/></svg></button>
+      <button type="button" id="b-down" aria-label="Next state"><svg viewBox="0 0 16 16"><path d="m2 6 6 6 6-6"/></svg></button>
+    </div>
+    <div class="grp" role="group" aria-label="Zoom">
+      <button type="button" id="b-less" aria-label="Zoom in, fewer eggs"><svg viewBox="0 0 16 16"><path d="M10 2 4 8l6 6"/></svg></button>
+      <span id="q" class="q" aria-hidden="true">×1</span>
+      <button type="button" id="b-more" aria-label="Zoom out, more eggs"><svg viewBox="0 0 16 16"><path d="m6 2 6 6-6 6"/></svg></button>
+    </div>
+    <button type="button" id="b-auto" class="auto" aria-pressed="false">AUTO</button>
+  </nav>
+</div>
+<p id="live" class="sr" role="status" aria-live="polite"></p>
+<script src="morph.js"></script>
+</body>
+</html>

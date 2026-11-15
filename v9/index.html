@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141414">
+<title>Egg Scale — Interaction Lab v9</title>
+<meta name="description" content="One process, seven steps, read downward. Each column to the right is the same process at a larger scale, until the eggs become a field of pixel circles.">
+<link rel="stylesheet" href="scale.css">
+</head>
+<body>
+<div id="app">
+  <header class="hdr">
+    <div><b>EGG SCALE</b><span class="sub"> / one process, larger</span></div>
+    <div class="r"><span class="keys">↑↓ step · ←→ scale · A auto</span><span id="cnt" class="cnt">01 / 07</span></div>
+  </header>
+
+  <main class="main">
+    <div id="field" class="field" tabindex="0" aria-label="Seven steps read downward, five scales read left to right. Scroll to explore. Tap a row to choose a step.">
+      <div id="labs" class="labs" aria-hidden="true"></div>
+      <div id="inner" class="inner"></div>
+    </div>
+
+    <section class="panel">
+      <p id="cue" class="cue" aria-hidden="true"><em>→</em> the same seven steps, larger each column <em class="d">↓</em></p>
+      <div class="step"><span id="n" class="n">01</span><h1 id="v" class="v">COLD STORE</h1><span id="tag" class="tag">INBOX</span></div>
+      <p id="biz" class="biz"></p>
+      <p id="scl" class="scl"></p>
+    </section>
+  </main>
+
+  <nav class="bar" aria-label="Controls">
+    <div class="grp" role="group" aria-label="Step">
+      <button type="button" id="b-up" aria-label="Previous step"><svg viewBox="0 0 16 16"><path d="m2 10 6-6 6 6"/></svg></button>
+      <button type="button" id="b-down" aria-label="Next step"><svg viewBox="0 0 16 16"><path d="m2 6 6 6 6-6"/></svg></button>
+    </div>
+    <div class="grp" role="group" aria-label="Scale">
+      <button type="button" id="b-left" aria-label="Smaller scale"><svg viewBox="0 0 16 16"><path d="M10 2 4 8l6 6"/></svg></button>
+      <span id="q" class="q" aria-hidden="true">×1</span>
+      <button type="button" id="b-right" aria-label="Larger scale"><svg viewBox="0 0 16 16"><path d="m6 2 6 6-6 6"/></svg></button>
+    </div>
+    <button type="button" id="b-auto" class="auto" aria-pressed="false">AUTO</button>
+  </nav>
+</div>
+<p id="live" class="sr" role="status" aria-live="polite"></p>
+<script src="scale.js"></script>
+</body>
+</html>

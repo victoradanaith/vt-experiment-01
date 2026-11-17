@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Parallax Index — specimen strip prototype</title>
+<link rel="stylesheet" href="../v12-reverse-egg/fonts.css">
+<style>
+:root{
+  --ivory:#f4ecdc; --ivory-deep:#e9ddc3; --ink:#1b1812;
+  --lime:#c3e04a; --lime-deep:#8da52a; --violet:#6a4fc4; --violet-deep:#4c3691;
+  --line:rgba(27,24,18,.18);
+  --f-head:'Chakra Petch','Montserrat','IBM Plex Sans Thai',sans-serif;
+  --f-body:'Montserrat','IBM Plex Sans Thai',sans-serif;
+  --f-mono:'Chakra Petch','IBM Plex Sans Thai',monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;}
+body{background:linear-gradient(180deg,var(--ivory),var(--ivory-deep));color:var(--ink);font-family:var(--f-body);line-height:1.5;}
+.skip{position:absolute;left:-999px;top:0;background:var(--ink);color:var(--ivory);padding:.6rem 1rem;z-index:30;font-family:var(--f-mono);}
+.skip:focus{left:0;}
+:focus-visible{outline:3px solid var(--violet-deep);outline-offset:2px;}
+
+.site-head{max-width:1100px;margin:0 auto;padding:2rem 1rem .5rem;}
+.ruler-row{height:12px;background-image:repeating-linear-gradient(to right,var(--ink) 0 1px,transparent 1px 11px);opacity:.45;margin-bottom:.9rem;}
+.site-head h1{font-family:var(--f-head);font-weight:700;font-size:clamp(1.9rem,6.5vw,3.2rem);letter-spacing:-.03em;margin:0 0 .4rem;}
+.site-head .sub{max-width:40ch;opacity:.75;font-size:.95rem;margin:0;}
+
+nav.ruler{position:fixed;right:12px;top:50%;transform:translateY(-50%);display:none;flex-direction:column;gap:2.6rem;font-family:var(--f-mono);font-size:.75rem;color:var(--violet-deep);z-index:5;}
+@media(min-width:900px){nav.ruler{display:flex;}}
+nav.ruler span{position:relative;padding-left:16px;}
+nav.ruler span::before{content:'';position:absolute;left:0;top:50%;width:11px;height:1px;background:currentColor;}
+nav.ruler span.active{color:var(--ink);font-weight:700;}
+nav.ruler span.active::before{height:2px;background:var(--lime-deep);}
+
+main{max-width:1100px;margin:0 auto;padding:0 1rem 2rem;}
+.chapter{padding:2.4rem 0;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr;gap:1rem;}
+.chapter:first-of-type{border-top:none;}
+.numeral{font-family:var(--f-head);font-weight:700;font-size:clamp(5.2rem,27vw,12.5rem);line-height:.66;height:.72em;overflow:hidden;letter-spacing:-.04em;background:linear-gradient(155deg,var(--violet),var(--lime));-webkit-background-clip:text;background-clip:text;color:transparent;user-select:none;}
+.content h2{font-family:var(--f-head);font-size:clamp(1.4rem,3.4vw,2rem);margin:0 0 .5rem;}
+.content > p{max-width:48ch;opacity:.8;margin:0 0 .25rem;font-size:.95rem;}
+@media(min-width:760px){
+  .chapter{grid-template-columns:.9fr 1.1fr;column-gap:2.2rem;align-items:start;}
+  .chapter.even{grid-template-columns:1.1fr .9fr;}
+  .chapter.even .numeral{order:2;text-align:right;}
+  .chapter.even .content{order:1;}
+  .chapter.odd .content{margin-top:3.2rem;}
+}
+
+.compare{margin-top:1.4rem;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:rgba(255,255,255,.4);backdrop-filter:saturate(130%);}
+.track{display:flex;width:300%;transition:transform .4s cubic-bezier(.2,.8,.2,1);}
+.state{flex:0 0 33.3333%;padding:1.1rem;}
+.swatch{width:100%;aspect-ratio:16/9;border-radius:4px;border:1px solid var(--line);background-color:var(--ivory-deep);margin-bottom:.7rem;}
+.swatch-sparse{background-image:radial-gradient(var(--ink) 1.3px,transparent 1.6px);background-size:22px 22px;}
+.swatch-clustered{background-image:radial-gradient(var(--violet) 1.6px,transparent 1.9px);background-size:11px 11px;}
+.swatch-saturated{background-image:radial-gradient(var(--ink) 1.8px,transparent 2px);background-size:5px 5px;}
+.swatch-thin{background-image:linear-gradient(135deg,var(--lime) 0%,transparent 40%);}
+.swatch-mid{background-image:linear-gradient(135deg,var(--lime) 0%,var(--violet) 55%,transparent 85%);}
+.swatch-packed{background-image:linear-gradient(135deg,var(--lime),var(--violet));}
+.swatch-still{background-image:repeating-linear-gradient(100deg,var(--ink) 0 10px,transparent 10px 42px);}
+.swatch-drift{background-image:repeating-linear-gradient(100deg,var(--violet) 0 6px,transparent 6px 20px);}
+.swatch-surge{background-image:repeating-linear-gradient(100deg,var(--lime) 0 3px,transparent 3px 8px);}
+.swatch-uniform{background-image:radial-gradient(circle at 25% 30%,var(--ink) 0 6px,transparent 7px),radial-gradient(circle at 75% 30%,var(--ink) 0 6px,transparent 7px),radial-gradient(circle at 25% 75%,var(--ink) 0 6px,transparent 7px),radial-gradient(circle at 75% 75%,var(--ink) 0 6px,transparent 7px);}
+.swatch-scattered{background-image:radial-gradient(circle at 15% 20%,var(--violet) 0 5px,transparent 6px),radial-gradient(circle at 65% 10%,var(--violet) 0 7px,transparent 8px),radial-gradient(circle at 40% 60%,var(--violet) 0 4px,transparent 5px),radial-gradient(circle at 85% 70%,var(--violet) 0 6px,transparent 7px),radial-gradient(circle at 20% 85%,var(--violet) 0 5px,transparent 6px);}
+.swatch-fractured{background-image:radial-gradient(circle at 10% 15%,var(--lime) 0 4px,transparent 5px),radial-gradient(circle at 90% 20%,var(--lime) 0 8px,transparent 9px),radial-gradient(circle at 30% 50%,var(--lime) 0 3px,transparent 4px),radial-gradient(circle at 70% 45%,var(--lime) 0 6px,transparent 7px),radial-gradient(circle at 50% 85%,var(--lime) 0 5px,transparent 6px),radial-gradient(circle at 85% 80%,var(--lime) 0 4px,transparent 5px);}
+.state h3{font-family:var(--f-head);margin:0 0 .25rem;font-size:1.1rem;}
+.state p{margin:0;font-size:.88rem;opacity:.85;}
+
+.compare-ui{display:flex;align-items:center;justify-content:space-between;padding:.5rem .75rem;border-top:1px solid var(--line);background:rgba(0,0,0,.03);}
+.compare-ui button{font-family:var(--f-mono);font-size:1rem;background:var(--ivory);border:1px solid var(--ink);border-radius:4px;padding:.3rem .7rem;cursor:pointer;color:var(--ink);}
+.compare-ui button:disabled{opacity:.3;cursor:not-allowed;}
+.dots{display:flex;gap:.4rem;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--line);}
+.dot.active{background:var(--violet);}
+.swipe-cue{text-align:center;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--violet-deep);margin:.4rem 0 .6rem;animation:nudge 1.6s ease-in-out infinite;}
+@media(min-width:760px){.swipe-cue{display:none;}}
+@keyframes nudge{0%,100%{transform:translateX(0);}50%{transform:translateX(4px);}}
+
+.density-control{margin:1.3rem 0 1.5rem;padding:1rem;border:1px solid var(--line);border-radius:6px;background:rgba(255,255,255,.4);display:grid;gap:.8rem;}
+.density-control label{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.9rem;}
+input[type=range]{width:100%;accent-color:var(--violet);}
+.density-shape{width:128px;height:128px;margin:0 auto;background:linear-gradient(155deg,var(--lime),var(--violet));clip-path:polygon(50% 2%,60% 35%,98% 50%,60% 65%,50% 98%,40% 65%,2% 50%,40% 35%);transition:clip-path .3s ease;}
+
+.statusbar{position:fixed;left:0;right:0;bottom:0;margin:0;padding:.55rem 1rem;background:var(--ink);color:var(--ivory);font-family:var(--f-mono);font-size:.8rem;letter-spacing:.02em;z-index:10;}
+main{padding-bottom:3.4rem;}
+.site-foot{max-width:1100px;margin:0 auto;padding:1rem 1rem 4.6rem;font-size:.75rem;opacity:.6;}
+
+@media(prefers-reduced-motion:reduce){
+  .track,.density-shape{transition:none;}
+  .swipe-cue{animation:none;}
+}
+.no-motion .track,.no-motion .density-shape{transition:none;}
+.no-motion .swipe-cue{animation:none;}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="ruler-row" aria-hidden="true"></div>
+  <h1>PARALLAX INDEX</h1>
+  <p class="sub">A specimen strip of abstract data states. Scroll through four chapters; swipe or use the buttons to compare states within each one.</p>
+</header>
+
+<nav class="ruler" aria-hidden="true"><span>01</span><span>02</span><span>03</span><span>04</span></nav>
+
+<main id="main">
+
+<section id="ch-1" class="chapter odd" aria-labelledby="h1">
+  <div class="numeral" aria-hidden="true">01</div>
+  <div class="content">
+    <h2 id="h1">VOLUME</h2>
+    <p>How much is present. Three positions along one axis, from near-empty to filled to the edge.</p>
+    <div class="compare" data-name="VOLUME">
+      <div class="track" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Volume states, use arrow keys or the buttons below">
+        <article class="state" aria-hidden="false"><div class="swatch swatch-sparse"></div><h3>Sparse</h3><p>Isolated marks, wide intervals, low signal.</p></article>
+        <article class="state" aria-hidden="true"><div class="swatch swatch-clustered"></div><h3>Clustered</h3><p>Marks pool into irregular groups; gaps persist.</p></article>
+        <article class="state" aria-hidden="true"><div class="swatch swatch-saturated"></div><h3>Saturated</h3><p>Field fills; intervals collapse toward zero.</p></article>
+      </div>
+      <div class="compare-ui">
+        <button class="prev" aria-label="Previous state in Volume">←</button>
+        <div class="dots" aria-hidden="true"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
+        <button class="next" aria-label="Next state in Volume">→</button>
+      </div>
+      <p class="swipe-cue" aria-hidden="true">⇆ swipe</p>
+    </div>
+  </div>
+</section>
+
+<section id="ch-2" class="chapter even" aria-labelledby="h2">
+  <div class="numeral" aria-hidden="true">02</div>
+  <div class="content">
+    <h2 id="h2">DENSITY</h2>
+    <p>How tightly a field is packed. Move the control to feel the shape thicken from spiky to whole.</p>
+    <div class="density-control">
+      <label for="densitySlider">Density <span id="densityValue">50%</span></label>
+      <input type="range" id="densitySlider" min="0" max="100" value="50" step="1">
+      <div class="density-shape" id="densityShape" aria-hidden="true"></div>
+    </div>
+    <div class="compare" data-name="DENSITY">
+      <div class="track" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Density states, use arrow keys or the buttons below">
+        <article class="state" aria-hidden="false"><div class="swatch swatch-thin"></div><h3>Thin field</h3><p>Coverage falls off quickly; most of the area is empty.</p></article>
+        <article class="state" aria-hidden="true"><div class="swatch swatch-mid"></div><h3>Mid field</h3><p>Coverage trails across half the area before fading.</p></article>
+        <article class="state" aria-hidden="true"><div class="swatch swatch-packed"></div><h3>Packed field</h3><p>Coverage reaches edge to edge with no fade.</p></article>
+      </div>
+      <div class="compare-ui">
+        <button class="prev" aria-label="Previous state in Density">←</button>
+        <div class="dots" aria-hidden="true"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
+        <button class="next" aria-label="Next state in Density">→</button>
+      </div>
+      <p class="swipe-cue" aria-hidden="true">⇆ swipe</p>
+    </div>
+  </div>
+</section>
+
+<section id="ch-3" class="chapter odd" aria-labelledby="h3">
+  <div class="numeral" aria-hidden="true">03</div>
+  <div class="content">
+    <h2 id="h3">VELOCITY</h2>
+    <p>How fast a pattern seems to move. Stripes compress as apparent speed increases.</p>
+    <div class="compare" data-name="VELOCITY">
+      <div class="track" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Velocity states, use arrow keys or the buttons below">
+        <article class="state" aria-hidden="false"><div class="swatch swatch-still"></div><h3>Still</h3><p>Wide, even bands; nothing appears to move.</p></article>
+        <article class="state" aria-hidden="true"><div class="swatch swatch-drift"></div><h3>Drift</h3><p>Bands narrow and tilt; slow directional motion reads.</p></article>
+        <article class="state" aria-hidden="true"><div class="swatch swatch-surge"></div><h3>Surge</h3><p>Bands compress to a blur; motion overtakes form.</p></article>
+      </div>
+      <div class="compare-ui">
+        <button class="prev" aria-label="Previous state in Velocity">←</button>
+        <div class="dots" aria-hidden="true"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
+        <button class="next" aria-label="Next state in Velocity">→</button>
+      </div>
+      <p class="swipe-cue" aria-hidden="true">⇆ swipe</p>
+    </div>
+  </div>
+</section>
+
+<section id="ch-4" class="chapter even" aria-labelledby="h4">
+  <div class="numeral" aria-hidden="true">04</div>
+  <div class="content">
+    <h2 id="h4">VARIANCE</h2>
+    <p>How unevenly points fall. From a regular grid to a fractured scatter.</p>
+    <div class="compare" data-name="VARIANCE">
+      <div class="track" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Variance states, use arrow keys or the buttons below">
+        <article class="state" aria-hidden="false"><div class="swatch swatch-uniform"></div><h3>Uniform</h3><p>Points sit on a regular grid; spacing is predictable.</p></article>
+        <article class="state" aria-hidden="true"><div class="swatch swatch-scattered"></div><h3>Scattered</h3><p>Points drift off-grid; spacing varies within a range.</p></article>
+        <article class="state" aria-hidden="true"><div class="swatch swatch-fractured"></div><h3>Fractured</h3><p>Points cluster and void unpredictably; no grid remains.</p></article>
+      </div>
+      <div class="compare-ui">
+        <button class="prev" aria-label="Previous state in Variance">←</button>
+        <div class="dots" aria-hidden="true"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
+        <button class="next" aria-label="Next state in Variance">→</button>
+      </div>
+      <p class="swipe-cue" aria-hidden="true">⇆ swipe</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<p class="statusbar" id="status" role="status" aria-live="polite">Chapter 1 of 4 — VOLUME</p>
+
+<footer class="site-foot">
+  <p>Prototype — Parallax Index — no real data, no backend. VT nightly experiment, 2026-11-17.</p>
+</footer>
+
+<script>
+(function(){
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduceMotion){ document.documentElement.classList.add('no-motion'); }
+
+  var statusEl = document.getElementById('status');
+  function announce(text){ if(statusEl) statusEl.textContent = text; }
+
+  var compares = document.querySelectorAll('.compare');
+  compares.forEach(function(comp){
+    var name = comp.getAttribute('data-name');
+    var track = comp.querySelector('.track');
+    var states = Array.prototype.slice.call(comp.querySelectorAll('.state'));
+    var dots = Array.prototype.slice.call(comp.querySelectorAll('.dot'));
+    var prevBtn = comp.querySelector('.prev');
+    var nextBtn = comp.querySelector('.next');
+    var index = 0;
+
+    function render(){
+      track.style.transform = 'translateX(-' + (index * (100/states.length)) + '%)';
+      states.forEach(function(s,i){ s.setAttribute('aria-hidden', i===index ? 'false' : 'true'); });
+      dots.forEach(function(d,i){ d.classList.toggle('active', i===index); });
+      prevBtn.disabled = index === 0;
+      nextBtn.disabled = index === states.length - 1;
+      var h3 = states[index].querySelector('h3');
+      announce(name + ' — state ' + (index+1) + ' of ' + states.length + ': ' + (h3 ? h3.textContent : ''));
+    }
+    function go(step){
+      var next = index + step;
+      if(next < 0 || next >= states.length) return;
+      index = next;
+      render();
+    }
+    prevBtn.addEventListener('click', function(){ go(-1); });
+    nextBtn.addEventListener('click', function(){ go(1); });
+    track.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowLeft'){ e.preventDefault(); go(-1); }
+      else if(e.key === 'ArrowRight'){ e.preventDefault(); go(1); }
+    });
+
+    var startX = 0, startY = 0, active = false;
+    track.addEventListener('touchstart', function(e){
+      startX = e.touches[0].clientX; startY = e.touches[0].clientY; active = true;
+    }, {passive:true});
+    track.addEventListener('touchend', function(e){
+      if(!active) return; active = false;
+      var dx = e.changedTouches[0].clientX - startX;
+      var dy = e.changedTouches[0].clientY - startY;
+      if(Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)){ go(dx < 0 ? 1 : -1); }
+    }, {passive:true});
+
+    render();
+  });
+
+  var slider = document.getElementById('densitySlider');
+  var shape = document.getElementById('densityShape');
+  var valueOut = document.getElementById('densityValue');
+  function shapePolygon(value){
+    var pts = 16, norm = value/100, inner = 14 + norm*34, outer = 48, parts = [];
+    for(var i=0;i<pts;i++){
+      var angle = (i/pts) * Math.PI*2 - Math.PI/2;
+      var r = (i % 2 === 0) ? outer : inner;
+      var x = 50 + r*Math.cos(angle);
+      var y = 50 + r*Math.sin(angle);
+      parts.push(x.toFixed(1) + '% ' + y.toFixed(1) + '%');
+    }
+    return 'polygon(' + parts.join(',') + ')';
+  }
+  function updateDensity(value){
+    valueOut.textContent = value + '%';
+    shape.style.clipPath = shapePolygon(value);
+    announce('DENSITY set to ' + value + '%');
+  }
+  if(slider){
+    slider.addEventListener('input', function(){ updateDensity(parseInt(slider.value,10)); });
+    updateDensity(parseInt(slider.value,10));
+  }
+
+  var chapters = Array.prototype.slice.call(document.querySelectorAll('.chapter'));
+  var rulerSpans = Array.prototype.slice.call(document.querySelectorAll('nav.ruler span'));
+  chapters.forEach(function(ch,i){ ch.setAttribute('data-index', i); });
+
+  if('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting && entry.intersectionRatio > 0.5){
+          var idx = parseInt(entry.target.getAttribute('data-index'),10);
+          rulerSpans.forEach(function(s,i){ s.classList.toggle('active', i===idx); });
+          var h2 = entry.target.querySelector('h2');
+          announce('Chapter ' + (idx+1) + ' of ' + chapters.length + ' — ' + (h2 ? h2.textContent : ''));
+        }
+      });
+    }, {threshold:[0.5]});
+    chapters.forEach(function(ch){ obs.observe(ch); });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  SIGNAL LOOM — nightly interface lab, 18 November 2026, Bangkok.
+
+  Concept: an editorial "score" instrument, not a dashboard. A fixed count of
+  discrete beats is re-threaded into three rhythms — Pulse (steady beat),
+  Drift (spacing that widens and narrows), Weave (two signals interleaved).
+  Shape, the numbered ruler, and the three measures below are all derived
+  directly from the same interval geometry, so changing the state or the
+  spacing control genuinely changes the drawn line and the numbers, not just
+  a label.
+
+  Access requirements: none. No login, no network calls, no external
+  libraries, no images, no storage, no analytics. Open this file directly in
+  any modern browser. The stylesheet link below is optional type dressing
+  (Montserrat / Chakra Petch / IBM Plex Sans Thai) and the page works fully
+  on system fonts if that file is not present alongside it.
+
+  All numeric measures on this page are exploratory sample data generated
+  for this prototype. They are not a real signal, broadcast, or performance.
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signal Loom — nightly interface lab, 18 Nov 2026</title>
+<link rel="stylesheet" href="../v12-reverse-egg/fonts.css">
+<style>
+  :root{
+    --paper:#f3efe6;
+    --paper-2:#eae3d3;
+    --ink:#1b1712;
+    --ink-soft:#5a5248;
+    --coral:#e8603f;
+    --coral-text:#a8431f;
+    --lav-a:#b9a7e8;
+    --lav-b:#8470c9;
+    --line:#d8cdb8;
+    --line-soft:#e3dbc8;
+  }
+
+  *{box-sizing:border-box;}
+
+  html{ background:var(--paper); scroll-behavior:smooth; }
+  html.reduced-motion{ scroll-behavior:auto; }
+
+  body{
+    margin:0;
+    min-width:0;
+    overflow-x:hidden;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Montserrat','Helvetica Neue',Arial,sans-serif;
+    line-height:1.5;
+  }
+
+  .reduced-motion *{ transition:none !important; animation:none !important; scroll-behavior:auto !important; }
+
+  .sr-only{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+
+  a{ color:var(--ink); text-decoration-color:var(--coral); }
+  a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible{
+    outline:2px solid var(--coral); outline-offset:3px;
+  }
+
+  /* ---------- header ---------- */
+  header.site-header{
+    padding:clamp(28px,6vw,64px) clamp(16px,5vw,56px) clamp(18px,4vw,32px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .signal-chip{
+    width:14px; height:14px; border-radius:3px; flex:0 0 auto;
+    background:linear-gradient(135deg,var(--lav-a),var(--lav-b));
+  }
+  h1.title{
+    font-family:'Chakra Petch','Montserrat',monospace;
+    font-weight:600;
+    font-size:clamp(2rem,8vw,4.4rem);
+    letter-spacing:0.01em;
+    margin:0;
+  }
+  .meta-line{ margin:12px 0 0; color:var(--ink-soft); font-size:0.95rem; }
+  .instructions-line{
+    margin:14px 0 0; font-size:0.82rem; color:var(--ink-soft);
+  }
+  .instructions-line .sep{ margin:0 .5em; opacity:.5; }
+  .jump-link{ font-size:0.82rem; margin-top:10px; display:inline-block; }
+
+  main{ padding:0 clamp(16px,5vw,56px); }
+
+  /* ---------- instrument section ---------- */
+  section#instrument{
+    padding:clamp(28px,6vw,56px) 0;
+    border-bottom:1px solid var(--line);
+  }
+  .section-heading{
+    font-family:'Chakra Petch','Montserrat',monospace;
+    font-size:clamp(1.3rem,3vw,1.8rem);
+    margin:0 0 6px;
+  }
+  .kicker{ font-size:.85rem; color:var(--ink-soft); margin:0 0 26px; }
+  .kicker .th{ font-size:inherit; }
+
+  .state-select-wrap{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:26px; max-width:100%;
+  }
+  .nav-btn{
+    flex:0 0 auto; width:44px; height:44px;
+    border:1px solid var(--ink); background:transparent; color:var(--ink);
+    font-size:1.3rem; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .15s ease,color .15s ease;
+  }
+  .nav-btn:hover{ background:var(--ink); color:var(--paper); }
+
+  .state-strip{
+    display:flex; gap:14px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    padding:6px 4px;
+    flex:1 1 auto; min-width:0;
+    scrollbar-width:thin;
+  }
+  .state-item{
+    flex:0 0 auto;
+    min-width:min(250px,72vw);
+    min-height:44px;
+    scroll-snap-align:center;
+    padding:14px 18px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    cursor:pointer;
+    transition:background .15s ease,border-color .15s ease;
+  }
+  .state-item[aria-selected="true"]{
+    border-color:var(--ink);
+    border-left:4px solid var(--coral);
+    background:var(--paper-2);
+  }
+  .state-num{
+    display:block; font-family:'Chakra Petch',monospace;
+    font-size:.72rem; letter-spacing:.12em; color:var(--coral-text);
+  }
+  .state-name{
+    display:block; font-family:'Chakra Petch',monospace;
+    font-size:1.2rem; margin-top:2px;
+  }
+  .state-desc{
+    display:block; font-size:.78rem; color:var(--ink-soft); margin-top:4px;
+  }
+
+  .big-numeral{
+    position:relative; overflow:hidden;
+    height:clamp(64px,15vw,140px);
+    margin-bottom:4px;
+  }
+  .big-numeral span{
+    position:absolute; left:-0.06em; top:-0.24em;
+    font-family:'Chakra Petch',monospace; font-weight:700;
+    font-size:clamp(100px,25vw,220px); line-height:1;
+    color:var(--coral); opacity:.1; white-space:nowrap;
+  }
+
+  .cue-line{
+    font-family:'Chakra Petch',monospace;
+    font-size:clamp(.88rem,1.8vw,1.05rem);
+    margin:0 0 22px;
+    padding:10px 14px;
+    border:1px solid var(--line);
+    background:var(--paper-2);
+    display:inline-block;
+    max-width:100%;
+  }
+  .state-strong{ color:var(--coral-text); font-weight:700; letter-spacing:.03em; }
+
+  .graph-wrap{ width:100%; margin-bottom:22px; }
+  svg#graph{ display:block; width:100%; height:auto; }
+  .baseline-line{ stroke:var(--line); stroke-width:1; }
+  .tick-mark{ stroke:var(--ink-soft); stroke-width:1; opacity:.5; }
+  .tick-label{
+    font-family:'Chakra Petch','Courier New',monospace;
+    font-size:11px; fill:var(--ink-soft);
+  }
+  path.line-primary{
+    fill:none; stroke:var(--coral); stroke-width:2.4;
+    stroke-linecap:round; stroke-linejoin:round;
+    transition:d .5s ease, stroke .3s ease;
+  }
+  path.line-secondary{
+    fill:none; stroke:url(#lavGrad); stroke-width:2;
+    stroke-linecap:round; stroke-linejoin:round; opacity:.9;
+    transition:d .5s ease;
+  }
+
+  .controls-row{
+    display:flex; flex-wrap:wrap; align-items:center; gap:14px;
+    padding:16px 0; border-top:1px solid var(--line-soft);
+  }
+  .controls-row label{ font-size:.9rem; font-weight:600; }
+  .controls-row .hint{ font-weight:400; color:var(--ink-soft); font-size:.78rem; }
+  input[type="range"]{
+    flex:1 1 220px; min-width:160px; accent-color:var(--coral);
+    height:44px; padding:0;
+  }
+  output{
+    font-family:'Chakra Petch',monospace; font-size:.88rem;
+    color:var(--ink); white-space:normal;
+  }
+
+  /* ---------- notes section ---------- */
+  section#notes{ padding:clamp(28px,6vw,56px) 0 clamp(40px,8vw,72px); }
+  @media (min-width:768px){
+    section#notes{ margin-left:12%; max-width:900px; }
+  }
+  .back-link{ font-size:.82rem; display:inline-block; margin-bottom:18px; }
+  .lede{ font-size:1rem; max-width:640px; color:var(--ink-soft); margin:0 0 30px; }
+
+  .measure-row{
+    display:grid;
+    grid-template-columns:1fr auto 2fr;
+    gap:10px 24px;
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+    align-items:baseline;
+  }
+  @media (max-width:480px){
+    .measure-row{ grid-template-columns:1fr; gap:4px; }
+  }
+  .measure-label{
+    font-weight:600; font-size:.8rem; letter-spacing:.05em;
+    text-transform:uppercase; color:var(--ink-soft);
+  }
+  .measure-value{
+    font-family:'Chakra Petch',monospace; font-size:1.6rem; color:var(--coral-text);
+  }
+  .measure-note{ font-size:.85rem; color:var(--ink-soft); }
+
+  footer.site-footer{
+    padding:24px clamp(16px,5vw,56px) 48px;
+    border-top:1px solid var(--line);
+    font-size:.82rem; color:var(--ink-soft);
+  }
+  footer.site-footer p{ margin:0 0 8px; }
+/* QA refinements: adequate targets, legible mobile ruler, resize-stable selection. */
+a { min-height:44px; display:inline-flex; align-items:center; }
+.jump-link,.back-link { display:inline-flex; }
+path.line-primary,path.line-secondary { vector-effect:non-scaling-stroke; stroke-width:1.5; }
+@media(max-width:600px){ .tick-label{font-size:28px;} svg#graph{min-height:150px;} }
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;} *,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important;}}
+</style>
+</head>
+<body>
+
+<header class="site-header" id="top">
+  <div class="brand-row">
+    <span class="signal-chip" aria-hidden="true"></span>
+    <h1 class="title">SIGNAL LOOM</h1>
+  </div>
+  <p class="meta-line">Nightly interface lab — 18 November 2026, Bangkok. Exploratory prototype, sample data only.</p>
+  <p class="instructions-line">
+    <span lang="th" class="th">เลื่อนเพื่ออ่าน</span> / scroll to read
+    <span class="sep">·</span>
+    <span lang="th" class="th">ปัดเพื่อเปลี่ยนจังหวะ</span> / swipe to change rhythm
+  </p>
+  <a class="jump-link" href="#instrument-heading">Jump to the score ↓</a>
+</header>
+
+<main>
+
+  <section id="instrument" aria-labelledby="instrument-heading">
+    <h2 class="section-heading" id="instrument-heading">The Score</h2>
+    <p class="kicker">Three rhythms threaded from the same interval count. Choose one with the strip, the arrows, or the keyboard.</p>
+
+    <div class="state-select-wrap">
+      <button type="button" id="prevState" class="nav-btn" aria-label="Previous state">‹</button>
+
+      <div
+        class="state-strip"
+        id="stateStrip"
+        role="listbox"
+        aria-label="Score state: Pulse, Drift, or Weave"
+        tabindex="0"
+      >
+        <div class="state-item" role="option" id="opt-pulse" data-state="pulse" data-index="0" aria-selected="true">
+          <span class="state-num">01</span>
+          <span class="state-name">Pulse</span>
+          <span class="state-desc">steady discrete beat</span>
+        </div>
+        <div class="state-item" role="option" id="opt-drift" data-state="drift" data-index="1" aria-selected="false">
+          <span class="state-num">02</span>
+          <span class="state-name">Drift</span>
+          <span class="state-desc">spacing widens, then narrows</span>
+        </div>
+        <div class="state-item" role="option" id="opt-weave" data-state="weave" data-index="2" aria-selected="false">
+          <span class="state-num">03</span>
+          <span class="state-name">Weave</span>
+          <span class="state-desc">two signals interleaved</span>
+        </div>
+      </div>
+
+      <button type="button" id="nextState" class="nav-btn" aria-label="Next state">›</button>
+    </div>
+    <p class="sr-only">Use the left and right arrow keys while the state list is focused to change the rhythm. Home and End jump to the first or last state.</p>
+
+    <div class="big-numeral" aria-hidden="true"><span id="bigNum">01</span></div>
+
+    <p id="cueLine" class="cue-line" role="status" aria-live="polite">
+      <span id="cueState" class="state-strong">PULSE</span>
+      <span aria-hidden="true"> · </span>
+      <span id="cueDetail">10 beats · steady discrete beat · variance 0.00 (sample)</span>
+    </p>
+
+    <div class="graph-wrap">
+      <svg id="graph" viewBox="0 0 1000 270" role="img" aria-labelledby="graphTitleEl" aria-describedby="graphDescEl" preserveAspectRatio="xMidYMid meet">
+        <title id="graphTitleEl">Pulse score graph</title>
+        <desc id="graphDescEl">Loading score description.</desc>
+        <defs>
+          <linearGradient id="lavGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#b9a7e8"/>
+            <stop offset="1" stop-color="#8470c9"/>
+          </linearGradient>
+        </defs>
+        <line class="baseline-line" x1="50" y1="236" x2="950" y2="236"></line>
+        <path id="linePrimary" class="line-primary" d=""></path>
+        <path id="lineSecondary" class="line-secondary" d="" style="display:none;"></path>
+        <g id="tickGroup"></g>
+      </svg>
+    </div>
+
+    <div class="controls-row">
+      <label for="spacing">Beat count / spacing <span class="hint">(sample control, not real time)</span></label>
+      <input type="range" id="spacing" min="4" max="20" step="1" value="10" aria-describedby="spacingReadout">
+      <output id="spacingReadout" for="spacing">10 beats · mean spacing 100.0 score units (sample)</output>
+    </div>
+  </section>
+
+  <section id="notes" aria-labelledby="notes-heading">
+    <a class="back-link" href="#instrument-heading">↑ Back to the score</a>
+    <h2 class="section-heading" id="notes-heading">Reading the Loom</h2>
+    <p class="lede">
+      Signal Loom treats a run of discrete beats as thread, not rows in a table.
+      Each state re-threads the same count of beats into a different rhythm — spacing
+      becomes shape, shape becomes meaning. The three measures below are read directly
+      off the line currently drawn above. All values are exploratory sample data for
+      this prototype; nothing here represents a real signal or performance.
+    </p>
+
+    <div class="measure-row">
+      <span class="measure-label">Interval Count</span>
+      <span class="measure-value" id="measureCount">10</span>
+      <span class="measure-note">How many discrete beats are threaded across the score right now.</span>
+    </div>
+    <div class="measure-row">
+      <span class="measure-label">Mean Spacing</span>
+      <span class="measure-value" id="measureSpacing">100.0 su</span>
+      <span class="measure-note">Average horizontal distance between beats, in abstract score units — not time.</span>
+    </div>
+    <div class="measure-row">
+      <span class="measure-label">Rhythm Variance</span>
+      <span class="measure-value" id="measureVariance">0.00</span>
+      <span class="measure-note">How unevenly the beats are spaced and raised, measured from the drawn line itself. Higher reads as more drifting or woven.</span>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>No login. No tracking. No data stored or published — a static prototype for the 18 November 2026 nightly build.</p>
+  <p><a href="#top">Back to top</a></p>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var svgNS = "http://www.w3.org/2000/svg";
+
+  var motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var reducedMotion = motionQuery.matches;
+  function syncMotion(){reducedMotion=motionQuery.matches;document.documentElement.classList.toggle("reduced-motion",reducedMotion);}
+  motionQuery.addEventListener("change",syncMotion);
+  syncMotion();
+
+  var stateOrder = ["pulse", "drift", "weave"];
+  var stateInfo = {
+    pulse: { name: "Pulse", cue: "steady discrete beat, uniform spacing" },
+    drift: { name: "Drift", cue: "spacing widens, then narrows" },
+    weave: { name: "Weave", cue: "two signals interleaved into a lattice" }
+  };
+
+  var currentIndex = 0;
+  var isProgrammaticScroll = false;
+  var scrollTimer = null;
+  var userScrolled = false;
+
+  var stateStrip = document.getElementById("stateStrip");
+  var stateItems = Array.prototype.slice.call(stateStrip.querySelectorAll(".state-item"));
+  var prevBtn = document.getElementById("prevState");
+  var nextBtn = document.getElementById("nextState");
+  var bigNum = document.getElementById("bigNum");
+  var cueState = document.getElementById("cueState");
+  var cueDetail = document.getElementById("cueDetail");
+  var graphTitleEl = document.getElementById("graphTitleEl");
+  var graphDescEl = document.getElementById("graphDescEl");
+  var linePrimary = document.getElementById("linePrimary");
+  var lineSecondary = document.getElementById("lineSecondary");
+  var tickGroup = document.getElementById("tickGroup");
+  var spacingInput = document.getElementById("spacing");
+  var spacingReadout = document.getElementById("spacingReadout");
+  var measureCount = document.getElementById("measureCount");
+  var measureSpacing = document.getElementById("measureSpacing");
+  var measureVariance = document.getElementById("measureVariance");
+
+  function easeInOutSine(t) {
+    return -(Math.cos(Math.PI * t) - 1) / 2;
+  }
+
+  function smoothPath(pts) {
+    if (pts.length < 2) return "";
+    var d = "M " + pts[0][0].toFixed(1) + " " + pts[0][1].toFixed(1);
+    for (var i = 0; i < pts.length - 1; i++) {
+      var x0 = pts[i][0], y0 = pts[i][1];
+      var x1 = pts[i + 1][0], y1 = pts[i + 1][1];
+      var mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
+      if (i === 0) {
+        d += " Q " + x0.toFixed(1) + " " + y0.toFixed(1) + " " + mx.toFixed(1) + " " + my.toFixed(1);
+      } else {
+        d += " T " + mx.toFixed(1) + " " + my.toFixed(1);
+      }
+    }
+    var last = pts[pts.length - 1];
+    d += " T " + last[0].toFixed(1) + " " + last[1].toFixed(1);
+    return d;
+  }
+
+  var MX = 50, INNER_W = 900;
+
+  function buildPulse(n) {
+    var baseline = 200;
+    var points = [];
+    for (var i = 0; i < n; i++) {
+      var t = i / (n - 1);
+      var x = MX + INNER_W * t;
+      var amp = (i % 2 === 0) ? 150 : 55;
+      points.push([x, baseline - amp]);
+    }
+    var segHalf = (INNER_W / (n - 1)) * 0.16;
+    var d = "M " + (MX - segHalf).toFixed(1) + " " + baseline;
+    for (var j = 0; j < points.length; j++) {
+      var p = points[j];
+      d += " L " + p[0].toFixed(1) + " " + p[1].toFixed(1);
+      d += " L " + (p[0] + segHalf).toFixed(1) + " " + baseline;
+    }
+    return { d: d, points: points };
+  }
+
+  function buildDrift(n) {
+    var baseline = 135;
+    var points = [];
+    for (var i = 0; i < n; i++) {
+      var t = i / (n - 1);
+      var warped = easeInOutSine(t);
+      var x = MX + INNER_W * warped;
+      var y = baseline - 70 * Math.sin(Math.PI * t) - 15 * Math.sin(4 * Math.PI * t);
+      points.push([x, y]);
+    }
+    return { d: smoothPath(points), points: points };
+  }
+
+  function buildWeave(n) {
+    var baseline = 135;
+    var primary = [], secondary = [];
+    for (var i = 0; i < n; i++) {
+      var t = i / (n - 1);
+      var x = MX + INNER_W * t;
+      var yA = baseline - 55 * Math.sin(4 * Math.PI * t);
+      var yB = baseline - 55 * Math.sin(4 * Math.PI * t + Math.PI);
+      primary.push([x, yA]);
+      secondary.push([x, yB]);
+    }
+    return {
+      primaryPath: smoothPath(primary),
+      secondaryPath: smoothPath(secondary),
+      points: primary
+    };
+  }
+
+  function computeMeasures(points) {
+    var segLens = [];
+    for (var i = 0; i < points.length - 1; i++) {
+      var dx = points[i + 1][0] - points[i][0];
+      var dy = points[i + 1][1] - points[i][1];
+      segLens.push(Math.sqrt(dx * dx + dy * dy));
+    }
+    var mean = segLens.reduce(function (a, b) { return a + b; }, 0) / segLens.length;
+    var variance = segLens.reduce(function (a, b) { return a + (b - mean) * (b - mean); }, 0) / segLens.length;
+    var stdev = Math.sqrt(variance);
+    var rhythmVariance = mean ? stdev / mean : 0;
+    var spacingWidth = INNER_W / (points.length - 1);
+    return {
+      count: points.length,
+      spacingWidth: spacingWidth.toFixed(1),
+      rhythmVariance: rhythmVariance.toFixed(2)
+    };
+  }
+
+  function renderTicks(points) {
+    while (tickGroup.firstChild) tickGroup.removeChild(tickGroup.firstChild);
+    var n = points.length;
+    var labelEvery = Math.ceil(n / (window.innerWidth < 600 ? 5 : 10));
+    for (var i = 0; i < n; i++) {
+      var x = points[i][0];
+      var tick = document.createElementNS(svgNS, "line");
+      tick.setAttribute("x1", x.toFixed(1));
+      tick.setAttribute("x2", x.toFixed(1));
+      tick.setAttribute("y1", "236");
+      tick.setAttribute("y2", "246");
+      tick.setAttribute("class", "tick-mark");
+      tickGroup.appendChild(tick);
+      if (i % labelEvery === 0 || i === n - 1) {
+        var text = document.createElementNS(svgNS, "text");
+        text.setAttribute("x", x.toFixed(1));
+        text.setAttribute("y", "260");
+        text.setAttribute("class", "tick-label");
+        text.setAttribute("text-anchor", "middle");
+        text.textContent = String(i).padStart(2, "0");
+        tickGroup.appendChild(text);
+      }
+    }
+  }
+
+  function render(announce) {
+    var state = stateOrder[currentIndex];
+    var n = parseInt(spacingInput.value, 10);
+    var build;
+    if (state === "pulse") build = buildPulse(n);
+    else if (state === "drift") build = buildDrift(n);
+    else build = buildWeave(n);
+
+    if (state === "weave") {
+      linePrimary.setAttribute("d", build.primaryPath);
+      lineSecondary.setAttribute("d", build.secondaryPath);
+      lineSecondary.style.display = "";
+    } else {
+      linePrimary.setAttribute("d", build.d);
+      lineSecondary.style.display = "none";
+    }
+
+    renderTicks(build.points);
+
+    var m = computeMeasures(build.points);
+    measureCount.textContent = m.count;
+    measureSpacing.textContent = m.spacingWidth + " su";
+    measureVariance.textContent = m.rhythmVariance;
+
+    bigNum.textContent = String(currentIndex + 1).padStart(2, "0");
+
+    stateItems.forEach(function (it) {
+      it.setAttribute("aria-selected", it.dataset.state === state ? "true" : "false");
+    });
+    stateStrip.setAttribute("aria-activedescendant", "opt-" + state);
+
+    var info = stateInfo[state];
+    cueState.textContent = info.name.toUpperCase();
+    var detail = n + " beats · " + info.cue + " · variance " + m.rhythmVariance + " (sample)";
+    cueDetail.textContent = detail;
+
+    graphTitleEl.textContent = info.name + " score, " + n + " beats";
+    graphDescEl.textContent = info.name + " score of " + n + " beats: " + info.cue + ". Rhythm variance " + m.rhythmVariance + ". Exploratory sample data, not a real signal or performance.";
+
+    spacingReadout.textContent = n + " beats · mean spacing " + m.spacingWidth + " score units (sample)";
+  }
+
+  function scrollStripTo(idx) {
+    syncMotion();
+    userScrolled = false;
+    var item = stateItems[idx];
+    if (!item) return;
+    isProgrammaticScroll = true;
+    stateStrip.scrollTo({left: item.offsetLeft - stateStrip.offsetLeft - (stateStrip.clientWidth - item.offsetWidth)/2, behavior: reducedMotion ? "auto" : "smooth"});
+    window.setTimeout(function () { isProgrammaticScroll = false; }, reducedMotion ? 0 : 500);
+  }
+
+  function goTo(idx) {
+    var newIndex = ((idx % stateOrder.length) + stateOrder.length) % stateOrder.length;
+    currentIndex = newIndex;
+    scrollStripTo(newIndex);
+    render(true);
+  }
+
+  function handleScrollSettled() {
+    if (isProgrammaticScroll || !userScrolled || stateStrip.scrollWidth <= stateStrip.clientWidth) return;
+    userScrolled = false;
+    var stripRect = stateStrip.getBoundingClientRect();
+    var center = stripRect.left + stripRect.width / 2;
+    var closest = 0, closestDist = Infinity;
+    stateItems.forEach(function (it, i) {
+      var r = it.getBoundingClientRect();
+      var itemCenter = r.left + r.width / 2;
+      var dist = Math.abs(itemCenter - center);
+      if (dist < closestDist) { closestDist = dist; closest = i; }
+    });
+    if (closest !== currentIndex) {
+      currentIndex = closest;
+      render(true);
+    }
+  }
+
+  stateStrip.addEventListener("pointerdown", function(){ userScrolled=true; isProgrammaticScroll=false; }, {passive:true});
+  stateStrip.addEventListener("wheel", function(){ userScrolled=true; isProgrammaticScroll=false; }, {passive:true});
+  window.addEventListener("resize", function(){userScrolled=false; render(false);});
+
+  if ("onscrollend" in window) {
+    stateStrip.addEventListener("scrollend", handleScrollSettled);
+  } else {
+    stateStrip.addEventListener("scroll", function () {
+      window.clearTimeout(scrollTimer);
+      scrollTimer = window.setTimeout(handleScrollSettled, 120);
+    });
+  }
+
+  stateItems.forEach(function (it, i) {
+    it.addEventListener("click", function () { goTo(i); });
+  });
+
+  stateStrip.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight") { e.preventDefault(); goTo(currentIndex + 1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); goTo(currentIndex - 1); }
+    else if (e.key === "Home") { e.preventDefault(); goTo(0); }
+    else if (e.key === "End") { e.preventDefault(); goTo(stateOrder.length - 1); }
+  });
+
+  prevBtn.addEventListener("click", function () { goTo(currentIndex - 1); });
+  nextBtn.addEventListener("click", function () { goTo(currentIndex + 1); });
+
+  spacingInput.addEventListener("input", function () { render(true); });
+
+  render(false);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-current="0">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SIGNAL DIAL</title>
+<style>
+:root{--amber:#e8a33d;--cyan:#5cd6d6;--lilac:#b79ef0;--bg:#121008;--fg:#ece6dc;--rule:rgba(236,230,220,.16);--mute:#a89b89}
+*{box-sizing:border-box}
+html{background:var(--bg);scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*{transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,Segoe UI,sans-serif;overflow-x:hidden}
+.cue{margin:0;padding:10px 16px;font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--mute);border-bottom:1px solid var(--rule)}
+.wrap{display:flex;flex-direction:column}
+@media(min-width:760px){.wrap{display:grid;grid-template-columns:1fr 340px}}
+main{min-width:0;order:2}
+.chap{position:relative;overflow:hidden;min-height:92vh;padding:12vh 24px 10vh 26px;border-bottom:1px solid var(--rule);border-left:2px solid var(--c)}
+.chap::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--c),transparent 55%);opacity:.08;pointer-events:none}
+.ord{position:absolute;right:14px;top:6vh;font-size:clamp(4rem,18vw,10rem);font-weight:700;color:var(--c);opacity:.15;line-height:1}
+.idx{display:block;margin-bottom:10px;font-size:.78rem;letter-spacing:.14em;color:var(--c)}
+.chap h2{margin:0 0 .3em;font-size:clamp(2.4rem,10vw,6rem);font-weight:700;letter-spacing:-.01em;line-height:.94}
+.chap p{max-width:44ch;color:#cfc5b6;line-height:1.6;font-size:.98rem;position:relative}
+aside.dial{position:sticky;top:0;align-self:start;order:1;padding:16px;border-left:1px solid var(--rule);touch-action:pan-y;background:var(--bg);--mc:var(--amber)}
+aside.dial:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
+svg{display:block;width:100%;height:auto}
+.rail{fill:none;stroke:var(--rule);stroke-width:2}
+.tick{fill:var(--bg);stroke:var(--mute);stroke-width:1.4}
+.marker{fill:var(--mc);transition:cx .45s ease,cy .45s ease}
+.readout{text-align:center;margin:4px 0 8px}
+.num{font-size:2.5rem;font-weight:800;line-height:1}
+.lbl{font-size:.8rem;letter-spacing:.14em;color:var(--mc)}
+.time{font-size:.74rem;color:var(--mute)}
+.stops{display:flex;gap:6px}
+.stops button{flex:1;min-height:44px;background:transparent;border:1px solid var(--rule);color:#cfc5b6;font-size:.64rem;letter-spacing:.05em;cursor:pointer}
+.stops button[aria-current="true"]{border-color:var(--mc);color:var(--fg)}
+.nav{display:flex;gap:6px;margin-top:6px}
+.nav button{flex:1;min-height:44px;background:transparent;border:1px solid var(--rule);color:#cfc5b6;font-size:.74rem;cursor:pointer}
+button:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.status{position:absolute;width:1px;height:1px;overflow:hidden;left:-9999px}
+@media(max-width:759px){
+ .wrap{display:flex;flex-direction:column}
+ main{order:2;min-width:0} .chap{scroll-margin-top:180px}
+ aside.dial{order:1;max-height:300px;overflow:hidden;border-left:none;border-bottom:1px solid var(--rule);display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 10px}
+ aside.dial svg{width:88px;flex:0 0 auto}
+ .readout{flex:1;text-align:left;margin:0}
+ .num{font-size:1.5rem}
+ .stops,.nav{width:100%;margin-top:4px}
+ .stops button,.nav button{font-size:.6rem;padding:2px}
+}
+</style>
+</head>
+<body>
+<p class="cue">Scroll the page, swipe the dial left/right, or use the buttons to move between chapters.</p>
+<div class="wrap">
+<main>
+<section class="chap" id="c0" data-chapter="0" style="--c:var(--amber)">
+<span class="ord">00</span><span class="idx">00:00</span><h2>OBSERVE</h2>
+<p>Establish reference. A still signal, uncorrected — the baseline against which every later drift will be measured.</p>
+</section>
+<section class="chap" id="c1" data-chapter="1" style="--c:var(--cyan)">
+<span class="ord">01</span><span class="idx">01:20</span><h2>ALIGN</h2>
+<p>Compare time shift. Two traces, one lagging — the gap between reference and reading made visible.</p>
+</section>
+<section class="chap" id="c2" data-chapter="2" style="--c:var(--lilac)">
+<span class="ord">02</span><span class="idx">02:40</span><h2>RELEASE</h2>
+<p>Remove offset. The correction is applied and the signal returns to true — drift cancelled, reading restored.</p>
+</section>
+</main>
+<aside class="dial" data-dial tabindex="0" aria-label="Chapter dial, use arrow keys">
+<svg viewBox="0 0 220 140" aria-hidden="true">
+<path class="rail" d="M20 112 A90 90 0 0 1 200 112"/>
+<circle class="tick" data-tick="0" cx="20" cy="112" r="5"></circle>
+<circle class="tick" data-tick="1" cx="110" cy="22" r="5"></circle>
+<circle class="tick" data-tick="2" cx="200" cy="112" r="5"></circle>
+<circle class="marker" id="marker" cx="20" cy="112" r="9"></circle>
+</svg>
+<div class="readout">
+<div class="num" id="num">00</div>
+<div class="lbl" id="lbl">OBSERVE</div>
+<div class="time" id="time">00:00</div>
+</div>
+<div class="stops">
+<button type="button" data-stop="0" aria-current="true">OBSERVE</button>
+<button type="button" data-stop="1" aria-current="false">ALIGN</button>
+<button type="button" data-stop="2" aria-current="false">RELEASE</button>
+</div>
+<div class="nav">
+<button type="button" data-prev aria-label="Previous chapter">‹ PREV</button>
+<button type="button" data-next aria-label="Next chapter">NEXT ›</button>
+</div>
+</aside>
+</div>
+<p class="status" id="status" role="status" aria-live="polite"><span id="statusText">Chapter 1 of 3: OBSERVE</span></p>
+<script>
+(function(){
+var chapters=[].slice.call(document.querySelectorAll('.chap'));
+var stopBtns=[].slice.call(document.querySelectorAll('[data-stop]'));
+var marker=document.getElementById('marker');
+var num=document.getElementById('num');
+var lbl=document.getElementById('lbl');
+var timeEl=document.getElementById('time');
+var statusText=document.getElementById('statusText');
+var dial=document.querySelector('[data-dial]');
+var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var DATA=[
+ {n:'00',l:'OBSERVE',t:'00:00',c:'var(--amber)',cx:20,cy:112},
+ {n:'01',l:'ALIGN',t:'01:20',c:'var(--cyan)',cx:110,cy:22},
+ {n:'02',l:'RELEASE',t:'02:40',c:'var(--lilac)',cx:200,cy:112}
+];
+var current=0;
+function setActive(i){
+ current=i;
+ document.documentElement.dataset.current=String(i);
+ var d=DATA[i];
+ num.textContent=d.n;lbl.textContent=d.l;timeEl.textContent=d.t;
+ marker.setAttribute('cx',d.cx);marker.setAttribute('cy',d.cy);
+ dial.style.setProperty('--mc',d.c);
+ stopBtns.forEach(function(b){b.setAttribute('aria-current',String(b.getAttribute('data-stop')===String(i)));});
+ statusText.textContent='Chapter '+(i+1)+' of 3: '+d.l;
+}
+function goTo(i){
+ i=Math.max(0,Math.min(2,i));
+ chapters[i].scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+}
+var io=new IntersectionObserver(function(entries){
+ entries.forEach(function(e){
+  if(e.isIntersecting&&e.intersectionRatio>0.5){
+   var i=Number(e.target.getAttribute('data-chapter'));
+   if(i!==current)setActive(i);
+  }
+ });
+},{threshold:[0.5]});
+chapters.forEach(function(c){io.observe(c);});
+stopBtns.forEach(function(b){b.addEventListener('click',function(){goTo(Number(b.getAttribute('data-stop')));});});
+document.querySelector('[data-prev]').addEventListener('click',function(){goTo(current-1);});
+document.querySelector('[data-next]').addEventListener('click',function(){goTo(current+1);});
+dial.addEventListener('keydown',function(e){
+ if(e.key==='ArrowRight'){e.preventDefault();goTo(current+1);}
+ else if(e.key==='ArrowLeft'){e.preventDefault();goTo(current-1);}
+});
+var sx=0,sy=0,tracking=false;
+dial.addEventListener('touchstart',function(e){
+ var t=e.touches[0];sx=t.clientX;sy=t.clientY;tracking=true;
+},{passive:true});
+dial.addEventListener('touchcancel',function(){tracking=false;},{passive:true});
+dial.addEventListener('touchend',function(e){
+ if(!tracking)return;tracking=false;
+ var t=e.changedTouches[0];var dx=t.clientX-sx,dy=t.clientY-sy;
+ if(Math.abs(dx)>45&&Math.abs(dx)>1.35*Math.abs(dy)){
+  if(dx<0)goTo(current+1);else goTo(current-1);
+ }
+},{passive:true});
+setActive(0);
+})();
+</script>
+</body>
+</html>

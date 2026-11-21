@@ -1,0 +1,80 @@
+:root{
+  --yolk:#FFC104;--ink:#161616;--shell:#F8F4EE;--g:16px;--ln:rgba(22,22,22,.2);--mut:rgba(22,22,22,.72);
+  --t-title:Montserrat,"IBM Plex Sans Thai","Helvetica Neue",Arial,sans-serif;
+  --t-ui:"Chakra Petch","IBM Plex Sans Thai","Helvetica Neue",Arial,sans-serif;
+  --t-body:"IBM Plex Sans Thai","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--shell);color:var(--ink);overscroll-behavior:none;font-family:var(--t-body)}
+button{font:inherit;color:inherit;letter-spacing:inherit;background:transparent}
+#app{position:fixed;inset:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr)}
+
+.hdr{position:relative;z-index:4;display:flex;align-items:center;gap:12px;padding:calc(env(safe-area-inset-top) + 6px) var(--g) 6px;min-height:58px;background:var(--shell);border-bottom:1px solid var(--ln)}
+.lg{width:64px;height:46px;display:block;flex:none}
+.coord{flex:1;text-align:right;font:500 11px/1 var(--t-ui);letter-spacing:.1em;font-variant-numeric:tabular-nums;color:var(--mut);white-space:nowrap;overflow:hidden}
+.sq{flex:none;width:44px;height:44px;padding:0;border:1px solid var(--ink);cursor:pointer;display:grid;place-items:center;touch-action:manipulation;font:600 12px/1 var(--t-ui);letter-spacing:.1em}
+.sq:hover{background:var(--ink);color:var(--shell)}
+.sq svg,.bar svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.4}
+
+/* the endless field: tiles are recycled DOM nodes, positioned from the camera */
+.field{position:relative;overflow:clip;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;outline:none}
+.field.drag{cursor:grabbing}
+.pos{position:absolute;left:0;top:0;will-change:transform}
+.tile{position:relative;display:block;width:100%;height:100%;padding:10px 10px 9px;border:1px solid var(--ink);text-align:left;cursor:pointer;overflow:hidden;
+  transform:scale(1);transition:transform .45s cubic-bezier(.3,1.45,.5,1),opacity .25s;touch-action:none}
+/* the press: the tile sinks a little while it is held, then springs back */
+.tile.pressed{transform:scale(.9);transition:transform .12s cubic-bezier(.2,.8,.2,1)}
+.tile:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.tile[data-tone="shell"]{background:var(--shell);color:var(--ink);--yk:#FFC104}
+.tile[data-tone="ink"]{background:var(--ink);color:var(--shell);--yk:#FFC104}
+.tile[data-tone="yolk"]{background:var(--yolk);color:var(--ink);border-color:var(--yolk);--yk:#161616}
+.tile.dim{opacity:.16}
+.n{position:absolute;left:10px;top:9px;font:500 11px/1 var(--t-ui);letter-spacing:.12em;font-variant-numeric:tabular-nums}
+.gl{position:absolute;left:50%;top:48%;width:62%;max-width:150px;transform:translate(-50%,-50%);aspect-ratio:1;pointer-events:none}
+.gl svg{width:100%;height:100%;display:block;overflow:visible}
+.ti{position:absolute;left:10px;bottom:9px;right:8px;font:500 16px/1.1 var(--t-title);letter-spacing:-.02em;pointer-events:none}
+.tx{position:absolute;left:12px;right:10px;top:12px;font:500 19px/1.12 var(--t-title);letter-spacing:-.03em;pointer-events:none;white-space:pre-line}
+.tl{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.tl img{width:82%;height:auto;display:block;-webkit-user-drag:none}
+
+.foot{position:relative;z-index:4;background:var(--shell);border-top:1px solid var(--ln);padding:0 var(--g) calc(8px + env(safe-area-inset-bottom))}
+.hint{margin:0;min-height:30px;display:flex;align-items:center;font:500 11px/1.2 var(--t-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);transition:opacity .4s}
+.hint.gone{opacity:0}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.grp{display:flex}
+.bar button{width:44px;height:44px;padding:0;margin-left:-1px;border:1px solid var(--ink);cursor:pointer;display:grid;place-items:center;touch-action:manipulation}
+.grp>button:first-child{margin-left:0}
+.bar button:hover{background:var(--ink);color:var(--shell)}
+.bar button:active{transform:scale(.92)}
+.bar .flt{width:auto;min-width:96px;padding:0 14px;margin:0;font:600 12px/1 var(--t-ui);letter-spacing:.14em}
+.bar .flt[data-on="1"]{background:var(--yolk);border-color:var(--yolk);color:var(--ink)}
+button:focus-visible{outline:2px solid var(--ink);outline-offset:2px;position:relative;z-index:2}
+
+.sheet{position:absolute;z-index:6;left:0;right:0;bottom:0;max-height:78%;display:flex;flex-direction:column;background:var(--shell);border-top:1px solid var(--ink);animation:up .25s cubic-bezier(.2,.8,.2,1)}
+.sheet[hidden]{display:none}
+@keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+.sh-top{flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px var(--g);border-bottom:1px solid var(--ln)}
+.sh-lab{font:600 12px/1.2 var(--t-ui);letter-spacing:.14em;text-transform:uppercase}
+.sh-body{overflow:auto;overscroll-behavior:contain;padding:12px var(--g) calc(16px + env(safe-area-inset-bottom))}
+.s-title{margin:0;font:500 40px/1.05 var(--t-title);letter-spacing:-.035em}
+.s-sub{margin:8px 0 0;font:500 16px/1.35 var(--t-ui);letter-spacing:.02em}
+.s-say{margin:10px 0 4px;font:400 16px/1.6 var(--t-body)}
+.rows{margin:0}
+.rows>div{padding:10px 0;border-top:1px solid var(--ln)}
+.rows dt{font:500 12px/1.2 var(--t-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.rows dd{margin:0;font:400 15px/1.6 var(--t-body)}
+.note{margin:10px 0 0;font:400 12px/1.6 var(--t-body);color:var(--mut)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0}
+
+@media (max-height:700px){.s-title{font-size:32px}.sheet{max-height:86%}}
+@media (min-width:900px) and (orientation:landscape){
+  :root{--g:40px}
+  .sheet{left:auto;top:58px;bottom:0;width:min(440px,38vw);max-height:none;border-top:0;border-left:1px solid var(--ink);animation:none}
+  .s-title{font-size:56px}.bar{justify-content:flex-start;gap:36px}
+}
+/* reduced motion: no scale, no slide, no inertia. The press is still shown, as an inset frame. */
+@media (prefers-reduced-motion:reduce){.tile,.tile.pressed{transition:none}.tile.pressed{transform:none;box-shadow:inset 0 0 0 4px var(--yolk)}.tile[data-tone="yolk"].pressed{box-shadow:inset 0 0 0 4px var(--ink)}.sheet{animation:none}.hint{transition:none}}
+html.rm .tile,html.rm .tile.pressed{transition:none}
+html.rm .tile.pressed{transform:none;box-shadow:inset 0 0 0 4px var(--yolk)}
+html.rm .tile[data-tone="yolk"].pressed{box-shadow:inset 0 0 0 4px var(--ink)}
+html.rm .sheet{animation:none}

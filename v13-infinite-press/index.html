@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F8F4EE">
+<title>Egg Token — Infinite Press v13</title>
+<meta name="description" content="Concept prototype: an endless field of Egg Token tiles you can drag in any direction. Every tile gives a small press when touched. Sample content, not a live service.">
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="press.css">
+</head>
+<body>
+<div id="app">
+  <header class="hdr">
+    <img class="lg" src="assets/egg-token-logo-1x.png" width="64" height="46" alt="Egg Token">
+    <span id="coord" class="coord" aria-hidden="true">X +0000 · Y +0000</span>
+    <button type="button" id="b-lang" class="sq" aria-label="Switch language to English">EN</button>
+  </header>
+
+  <main id="field" class="field" aria-label="Endless field of tiles. Drag in any direction. Each tile opens its details."></main>
+
+  <footer class="foot">
+    <p id="hint" class="hint">↔ ↕ drag anywhere · tap a tile to press it</p>
+    <nav class="bar" aria-label="Controls">
+      <div class="grp" role="group" aria-label="Move the field">
+        <button type="button" id="p-left" aria-label="Move left"><svg viewBox="0 0 16 16"><path d="M10 2 4 8l6 6"/></svg></button>
+        <button type="button" id="p-up" aria-label="Move up"><svg viewBox="0 0 16 16"><path d="m2 10 6-6 6 6"/></svg></button>
+        <button type="button" id="p-down" aria-label="Move down"><svg viewBox="0 0 16 16"><path d="m2 6 6 6 6-6"/></svg></button>
+        <button type="button" id="p-right" aria-label="Move right"><svg viewBox="0 0 16 16"><path d="m6 2 6 6-6 6"/></svg></button>
+      </div>
+      <button type="button" id="b-filter" class="flt" aria-label="Filter by step: all. Press to change.">ALL</button>
+    </nav>
+  </footer>
+
+  <aside id="sheet" class="sheet" role="dialog" aria-modal="false" aria-labelledby="s-title" hidden>
+    <div class="sh-top"><span id="s-lab" class="sh-lab"></span><button type="button" id="b-close" class="sq" aria-label="Close details"><svg viewBox="0 0 16 16"><path d="m3 3 10 10M13 3 3 13"/></svg></button></div>
+    <div class="sh-body">
+      <h2 id="s-title" class="s-title"></h2>
+      <p id="s-sub" class="s-sub"></p>
+      <p id="s-say" class="s-say"></p>
+      <dl class="rows">
+        <div><dt id="d1"></dt><dd id="r1"></dd></div>
+        <div><dt id="d2"></dt><dd id="r2"></dd></div>
+        <div><dt id="d3"></dt><dd id="r3"></dd></div>
+      </dl>
+      <p id="note" class="note"></p>
+    </div>
+  </aside>
+</div>
+<p id="live" class="sr" role="status" aria-live="polite"></p>
+<script src="press.js"></script>
+</body>
+</html>
